@@ -28,16 +28,21 @@ void draw() {
     astR = (int)random(10, 50);
   }
 
-  /* Zeichne Raumschiff als Dreieck an Position (posX, posY)
-   */
+  drawShip(posX, posY, breite, hoehe);
+
+  for (int i=0; i<3; i++) {
+    drawAsteroid(astX, astY+3*i*astR, astR);
+  }
+}
+
+void drawShip(int x, int y, int breite, int hoehe) {
   fill(0, 0, 255);
   noStroke();
-  triangle(posX, posY-hoehe/2, posX, posY+hoehe/2, posX+breite, posY);
+  triangle(x, y-hoehe/2, x, y+hoehe/2, x+breite, y);
+}
 
-  // zeichne Asteroiden
+void drawAsteroid(int x, int y, int r) {
   fill(140, 90, 35);
-  ellipseMode(RADIUS); // Ellipsen mit Mittelpunkt und Radien zeichnen
-  for (int i=0; i<3; i++) {
-    ellipse(astX, astY+3*i*astR, astR, astR);
-  }
+  ellipseMode(RADIUS);
+  ellipse(x, y, r, r);
 }
