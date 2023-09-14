@@ -1,16 +1,23 @@
 /* zuerst alle Variablen auflisten */
+final int N_ASTEROIDEN = 5;
 
-int posX = 50;   /* x-Position Raumschiff */
-int posY = 125;  /* y-Position Raumschiff */
-int breite = 50; /* Breite Raumschiff */
-int hoehe = 50;  /* Hoehe Raumschiff */
+int leben = 5;
 
-int astX = 250; /* x-Position Asteroid */
-int astY = 100; /* y-Position Asteroid */
-int astR = 25;  /* Radius Asteroid */
+int posX = 50;  /* x-Position Raumschiff */
+int posY = 125; /* y-Position Raumschiff */
+int r = 50;  /* "Radius" Raumschiff */
+
+/* Asteroiden */
+float[] astX = new float[N_ASTEROIDEN];
+float[] astY = new float[N_ASTEROIDEN];
+float[] astR = new float[N_ASTEROIDEN];
+float[] astSpeedX = new float[N_ASTEROIDEN];
 
 void setup() {
   size(400, 300);
+  for (int i=0; i<N_ASTEROIDEN; i++) {
+    initAsteroid(i);
+  }
 }
 
 void draw() {
@@ -20,28 +27,51 @@ void draw() {
   posY = mouseY;
 
   // Asteroiden bewegen sich nach links
-  astX--;
-  // Wenn Asteroiden über den linken Rand gehen...
-  if (astX < 0) {
-    // Asteroid wieder an rechten Rand setzen, zufälliger Radius
-    astX = width;
-    astR = (int)random(10, 50);
+  for (int i=0; i<N_ASTEROIDEN; i++) {
+    astX[i] += astSpeedX[i];
+    // Wenn Asteroid über den linken Rand geht...
+    if (astX[i] < -astR[i]) {
+      initAsteroid(i);
+    }
+
+    if (kollision(posX, posY, r, astX[i], astY[i], astR[i])) {
+      leben--;
+    }
   }
 
-  drawShip(posX, posY, breite, hoehe);
+  drawShip(posX, posY, r);
 
-  for (int i=0; i<3; i++) {
-    drawAsteroid(astX, astY+3*i*astR, astR);
+  // zeichne Asteroiden
+  for (int i=0; i<N_ASTEROIDEN; i++) {
+    drawAsteroid(astX[i], astY[i], astR[i]);
   }
 }
 
-void drawShip(int x, int y, int breite, int hoehe) {
+/* Asteroid wieder an rechten Rand setzen, y-Position zufällig
+ */
+void initAsteroid(int i) {
+  astR[i] = (int)random(10, 50);
+  astX[i] = width+astR[i];
+  astY[i] = random(height);
+  astSpeedX[i] = -random(0.5, 2);
+}
+
+boolean kollision(float x1, float y1, float r1, float x2, float y2, float r2) {
+  return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) <= (r1+r2)*(r1+r2);
+}
+
+void drawShip(float x, float y, float r) {
   fill(0, 0, 255);
   noStroke();
-  triangle(x, y-hoehe/2, x, y+hoehe/2, x+breite, y);
+  triangle(x, y-r, x, y+r, x+r, y);
+  // Kollisionsperimeter für Debugging-Zwecke
+  noFill();
+  stroke(127);
+  ellipseMode(RADIUS);
+  ellipse(x, y, r, r);
 }
 
-void drawAsteroid(int x, int y, int r) {
+void drawAsteroid(float x, float y, float r) {
   fill(140, 90, 35);
   ellipseMode(RADIUS);
   ellipse(x, y, r, r);
