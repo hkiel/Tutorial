@@ -1,15 +1,16 @@
-size(400, 300);  // Fenster mit 400x300 Pixeln öffnen
-background(0);   // Fenster komplett schwarz füllen
-
-// Füllfarbe für nachfolgende flächige Zeichnungen auf blau setzen
+size(400, 300);
+background(0);
 fill(0, 0, 255);
-noStroke();      // keine Umrandung für flächige Zeichnungen
+noStroke();
 
-/* Zeichne Raumschiff als Dreieck mit den Eckpunkten
- * (50,100), (50,150), (100,125)
+/* Zeichne Raumschiff als Dreieck an Position (posX, posY)
  */
-triangle(50, 100, 50, 150, 100, 125);
+int posX = 50;
+int posY = 125;
+int breite = 50;
+int hoehe = 50;
+triangle(posX, posY-hoehe/2, posX, posY+hoehe/2, posX+breite, posY);
 
 // zeichne Asteroid
-fill(140, 90, 35); // Füllfarbe braun
-ellipse(250, 100, 50, 50); // zeichne Kreis
+fill(140, 90, 35);
+ellipse(250, 100, 50, 50);
