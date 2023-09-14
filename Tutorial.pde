@@ -16,11 +16,17 @@ void setup() {
 void draw() {
   background(0);
 
-  // Raumschiff bewegt sich nach unten
-  posY = (posY+1) % height;
+  // Raumschiffposition von aktueller Mausposition übernehmen
+  posY = mouseY;
 
   // Asteroid bewegt sich nach links
   astX--;
+  // Wenn Asteroid über den linken Rand geht...
+  if (astX < 0) {
+    // Asteroid wieder an rechten Rand setzen, zufälliger Radius
+    astX = width;
+    astR = (int)random(10, 50);
+  }
 
   /* Zeichne Raumschiff als Dreieck an Position (posX, posY)
    */
