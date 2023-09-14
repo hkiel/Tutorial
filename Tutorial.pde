@@ -19,9 +19,9 @@ void draw() {
   // Raumschiffposition von aktueller Mausposition übernehmen
   posY = mouseY;
 
-  // Asteroid bewegt sich nach links
+  // Asteroiden bewegen sich nach links
   astX--;
-  // Wenn Asteroid über den linken Rand geht...
+  // Wenn Asteroiden über den linken Rand gehen...
   if (astX < 0) {
     // Asteroid wieder an rechten Rand setzen, zufälliger Radius
     astX = width;
@@ -34,8 +34,10 @@ void draw() {
   noStroke();
   triangle(posX, posY-hoehe/2, posX, posY+hoehe/2, posX+breite, posY);
 
-  // zeichne Asteroid
+  // zeichne Asteroiden
   fill(140, 90, 35);
   ellipseMode(RADIUS); // Ellipsen mit Mittelpunkt und Radien zeichnen
-  ellipse(astX, astY, astR, astR);
+  for (int i=0; i<3; i++) {
+    ellipse(astX, astY+3*i*astR, astR, astR);
+  }
 }
