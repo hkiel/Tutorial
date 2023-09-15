@@ -1,21 +1,7 @@
-class Asteroid {
-  float r;
-  float x;
-  float y;
-  float vx;
-  float vy;
+class Asteroid extends Ufo {
 
   Asteroid(float x, float y, float r, float vx) {
-    this.x = x;
-    this.y = y;
-    this.r = r;
-    this.vx = vx;
-    vy = 0;
-  }
-
-  void move() {
-    x += vx;
-    y += vy;
+    super(x, y, r, vx, 0);
   }
 
   void draw() {

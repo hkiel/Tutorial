@@ -1,18 +1,9 @@
-class Ship {
-  float r;
-  float x;
-  float y;
+class Ship extends Ufo {
 
   int leben = 5;
 
   Ship(float x, float y, float r) {
-    this.x = x;
-    this.y = y;
-    this.r = r;
-  }
-
-  boolean collision(Asteroid ast) {
-    return dist(this.x, this.y, ast.x, ast.y) < (this.r + ast.r);
+    super(x, y, r, 0, 0);
   }
 
   void draw() {
@@ -22,6 +13,6 @@ class Ship {
     fill(255);
     textAlign(CENTER, CENTER);
     textSize(r/2);
-    text(leben, x+r/2, y);
+    text(leben, x, y);
   }
 }
