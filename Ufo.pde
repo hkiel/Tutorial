@@ -1,4 +1,4 @@
-class Ufo {
+abstract class Ufo {
 
   float r;
   float x;
@@ -23,6 +23,5 @@ class Ufo {
     return dist(this.x, this.y, other.x, other.y) < (this.r + other.r);
   }
 
-  void draw() {
-  }
+  abstract void draw();
 }
