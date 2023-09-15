@@ -1,78 +1,71 @@
-/* zuerst alle Variablen auflisten */
 final int N_ASTEROIDEN = 5;
 
-int leben = 5;
-
-int posX = 50;  /* x-Position Raumschiff */
-int posY = 125; /* y-Position Raumschiff */
-int r = 50;  /* "Radius" Raumschiff */
-
-/* Asteroiden */
-float[] astX = new float[N_ASTEROIDEN];
-float[] astY = new float[N_ASTEROIDEN];
-float[] astR = new float[N_ASTEROIDEN];
-float[] astSpeedX = new float[N_ASTEROIDEN];
+Ship ship;
+Asteroid[] asteroids = new Asteroid[N_ASTEROIDEN];
 
 void setup() {
   size(400, 300);
-  for (int i=0; i<N_ASTEROIDEN; i++) {
-    initAsteroid(i);
-  }
+  ship = new Ship(50, 125, 25);
+  ship.leben = 0;
 }
 
 void draw() {
-  background(0);
+  if (ship.leben > 0) {
+    // Raumschiffposition von aktueller Mausposition übernehmen
+    ship.y = mouseY;
 
-  // Raumschiffposition von aktueller Mausposition übernehmen
-  posY = mouseY;
+    // Asteroiden bewegen sich nach links
+    for (int i=0; i<N_ASTEROIDEN; i++) {
+      asteroids[i].move();
+      // Wenn Asteroid über den linken Rand geht...
+      if (asteroids[i].x < -asteroids[i].r) {
+        asteroids[i] = initAsteroid();
+      }
 
-  // Asteroiden bewegen sich nach links
-  for (int i=0; i<N_ASTEROIDEN; i++) {
-    astX[i] += astSpeedX[i];
-    // Wenn Asteroid über den linken Rand geht...
-    if (astX[i] < -astR[i]) {
-      initAsteroid(i);
+      if (ship.collision(asteroids[i])) {
+        ship.leben--;
+        // Asteroid wieder ans Ende setzen
+        asteroids[i] = initAsteroid();
+      }
     }
 
-    if (kollision(posX, posY, r, astX[i], astY[i], astR[i])) {
-      leben--;
+    // Zeichne Spiel
+    background(0);
+    ship.draw();
+    for (Asteroid ast : asteroids) {
+      ast.draw();
     }
-  }
-
-  drawShip(posX, posY, r);
-
-  // zeichne Asteroiden
-  for (int i=0; i<N_ASTEROIDEN; i++) {
-    drawAsteroid(astX[i], astY[i], astR[i]);
+  } else {
+    // zeichne Menü
+    background(0, 0, 127);
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    fill(255);
+    text("Click to start...", width/2, height/2);
   }
 }
 
-/* Asteroid wieder an rechten Rand setzen, y-Position zufällig
+void mousePressed() {
+  if (ship.leben == 0) {
+    startGame();
+  } else {
+    // Feuern
+  }
+}
+
+/* neuen Asteroid an rechten Rand setzen, y-Position zufällig
  */
-void initAsteroid(int i) {
-  astR[i] = (int)random(10, 50);
-  astX[i] = width+astR[i];
-  astY[i] = random(height);
-  astSpeedX[i] = -random(0.5, 2);
+Asteroid initAsteroid() {
+  float r = ((int)random(1, 5))*10;
+  float x = width+r;
+  float y = random(height);
+  float vx = -random(0.5, 2);
+  return new Asteroid(x, y, r, vx);
 }
 
-boolean kollision(float x1, float y1, float r1, float x2, float y2, float r2) {
-  return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) <= (r1+r2)*(r1+r2);
-}
-
-void drawShip(float x, float y, float r) {
-  fill(0, 0, 255);
-  noStroke();
-  triangle(x, y-r, x, y+r, x+r, y);
-  // Kollisionsperimeter für Debugging-Zwecke
-  noFill();
-  stroke(127);
-  ellipseMode(RADIUS);
-  ellipse(x, y, r, r);
-}
-
-void drawAsteroid(float x, float y, float r) {
-  fill(140, 90, 35);
-  ellipseMode(RADIUS);
-  ellipse(x, y, r, r);
+void startGame() {
+  ship.leben = 5;
+  for (int i=0; i<N_ASTEROIDEN; i++) {
+    asteroids[i] = initAsteroid();
+  }
 }
