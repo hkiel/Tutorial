@@ -2,6 +2,7 @@ final int N_ASTEROIDEN = 5;
 
 Ship ship;
 Ufo[] ufos = new Ufo[N_ASTEROIDEN];
+ArrayList<Shot> shots = new ArrayList();
 int punkte = 0;
 
 void setup() {
@@ -22,6 +23,23 @@ void draw() {
         ufos[i] = initUfo();
       }
     }
+    // Liste rückwärts durchlaufen, da ggf. Elemente gelöscht werden
+    for (int i=shots.size()-1; i>=0; i--) {
+      Shot shot = shots.get(i);
+      shot.move();
+      // rausfliegende Shots entfernen!
+      if (shot.x > width+shot.r) {
+        shots.remove(i);
+        break;
+      }
+      for (int j=0; j<ufos.length; j++) {
+        if (shot.collides(ufos[j])) {
+          shots.remove(i);
+          ufos[j] = initUfo();
+          break;
+        }
+      }
+    }
     for (int i=0; i<ufos.length; i++) {
       if (ship.collides(ufos[i])) {
         if (ufos[i] instanceof Asteroid) {
@@ -39,6 +57,9 @@ void draw() {
     ship.draw();
     for (Ufo ufo : ufos) {
       ufo.draw();
+    }
+    for (Shot shot : shots) {
+      shot.draw();
     }
     fill(255);
     textSize(20);
@@ -59,6 +80,7 @@ void mousePressed() {
     startGame();
   } else {
     // Feuern
+    shots.add(new Shot(ship.x+ship.r, ship.y, 3));
   }
 }
 
@@ -82,4 +104,5 @@ void startGame() {
   for (int i=0; i<ufos.length; i++) {
     ufos[i] = initUfo();
   }
+  shots.clear();
 }
